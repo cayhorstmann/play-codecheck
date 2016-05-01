@@ -1,4 +1,4 @@
-import play.mvc.EssentialFilter;
+import play.api.mvc.EssentialFilter;
 import play.filters.cors.CORSFilter;
 import play.http.HttpFilters;
 
