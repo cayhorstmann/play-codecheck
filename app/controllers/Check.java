@@ -106,6 +106,7 @@ public class Check extends Controller {
 	
 	@BodyParser.Of(BodyParser.Json.class)
 	public Result checkJson() throws IOException  {
+		response().setHeader("Access-Control-Allow-Origin", "*");
 		Path submissionDir = Util.getDir(config, "submissions");
         Path tempDir = Util.createTempDirectory(submissionDir);
 	    JsonNode json = request().body().asJson();
