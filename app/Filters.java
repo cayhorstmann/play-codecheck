@@ -16,6 +16,6 @@ public class Filters implements HttpFilters {
     CORSFilter corsFilter;
 
     public EssentialFilter[] filters() {
-        return new EssentialFilter[] { corsFilter.asJava() };
+        return new EssentialFilter[] { corsFilter };
     }
 }
