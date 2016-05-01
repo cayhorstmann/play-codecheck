@@ -17,3 +17,4 @@ libraryDependencies ++= Seq(
 routesGenerator := InjectedRoutesGenerator
 
 libraryDependencies += "com.amazonaws" % "aws-java-sdk" % "1.10.35"
+libraryDependencies += filters
