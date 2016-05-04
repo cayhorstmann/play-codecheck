@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Config;
 import models.PlayConfig;
 import models.Util;
@@ -13,6 +14,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import play.libs.Json;
+import play.libs.Jsonp;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.BodyParser;
@@ -140,8 +143,17 @@ public class Check extends Controller {
 	    	return ok(Util.read(tempDir.resolve("submission/report.html"))).as("text/html");
 	    else if ("text".equals(type))
 	    	return ok(Util.read(tempDir.resolve("submission/report.txt"))).as("text/plain");
-	    else
+	    else if ("json".equals(type))
 	    	return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
+		else {
+			String callback = request().getQueryString("callback");
+			ObjectNode result = Json.newObject();
+			result.put("report", Util.read(tempDir.resolve("submission/report.html")));
+			if (callback == null)
+				return ok(result.asText());
+			else
+				return ok(Jsonp.jsonp(callback, result));
+		}
         // TODO: Delete tempDir	    
 	}
 }
