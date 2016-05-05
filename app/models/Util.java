@@ -49,6 +49,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import play.Logger;
 
 public class Util {
 	public static final int TIMEOUT = 2 * 60 * 1000; // 2 minutes; 
