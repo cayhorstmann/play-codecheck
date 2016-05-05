@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -143,8 +144,39 @@ public class Check extends Controller {
 	    	return ok(Util.read(tempDir.resolve("submission/report.html"))).as("text/html");
 	    else if ("text".equals(type))
 	    	return ok(Util.read(tempDir.resolve("submission/report.txt"))).as("text/plain");
-	    else if ("json".equals(type))
+	    else
 	    	return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
+        // TODO: Delete tempDir	    
+	}
+
+	public Result checkJsonp() throws IOException  {
+		Path submissionDir = Util.getDir(config, "submissions");
+		Path tempDir = Util.createTempDirectory(submissionDir);
+		Map<String, String[]> queryParams = request().queryString();
+		String repo = "ext";
+		String problem = null;
+		String level = "1";
+		String type = "json";
+		for (String key : queryParams.keySet()) {
+			String value = queryParams.get(key)[0];
+			if ("repo".equals(key)) repo = value;
+			else if ("problem".equals(key)) problem = value;
+			else if ("level".equals(key)) level = value;
+			else if ("type".equals(key)) type = value;
+			else {
+				Util.write(tempDir, key, value);
+			}
+		}
+		if (problem == null) // problem was submitted in JSON
+			Util.runLabrat(config, type, repo, problem, level, tempDir.toAbsolutePath(), tempDir.resolve("submission").toAbsolutePath());
+		else
+			Util.runLabrat(config, type, repo, problem, level, tempDir.resolve("submission").toAbsolutePath());
+		if ("html".equals(type))
+			return ok(Util.read(tempDir.resolve("submission/report.html"))).as("text/html");
+		else if ("text".equals(type))
+			return ok(Util.read(tempDir.resolve("submission/report.txt"))).as("text/plain");
+		else if ("json".equals(type))
+			return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
 		else {
 			String callback = request().getQueryString("callback");
 			ObjectNode result = Json.newObject();
@@ -154,6 +186,6 @@ public class Check extends Controller {
 			else
 				return ok(Jsonp.jsonp(callback, result));
 		}
-        // TODO: Delete tempDir	    
+		// TODO: Delete tempDir
 	}
 }
