@@ -390,7 +390,8 @@ public class Util {
 		String command = config.get("com.horstmann.codecheck." + type);
 		StringBuilder metas = new StringBuilder();
 		for (String meta : metaData) { if (metas.length() > 0) metas.append(" "); metas.append(meta); }
-		
+		Logger.info("runLabrat MessageFormat({}, {}, {}, {}, {}, {})", command, level, submissionDir,
+				problemDir, metas);
 		String script = MessageFormat.format(command, level, submissionDir,
 				problemDir, metas);
 		String result = runProcess(script, TIMEOUT);
