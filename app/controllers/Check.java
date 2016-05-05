@@ -6,6 +6,7 @@ import models.PlayConfig;
 import models.Util;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -157,15 +158,16 @@ public class Check extends Controller {
 		String problem = null;
 		String level = "1";
 		String type = "json";
+		String callback = "";
 		for (String key : queryParams.keySet()) {
 			String value = queryParams.get(key)[0];
 			if ("repo".equals(key)) repo = value;
 			else if ("problem".equals(key)) problem = value;
 			else if ("level".equals(key)) level = value;
 			else if ("type".equals(key)) type = value;
-			else {
-				Util.write(tempDir, key, value);
-			}
+			else if ("callback".equals(key)) callback = value;
+			else
+				Util.write(tempDir, key, URLDecoder.decode(value, "UTF-8"));
 		}
 		if (problem == null) // problem was submitted in JSON
 			Util.runLabrat(config, type, repo, problem, level, tempDir.toAbsolutePath(), tempDir.resolve("submission").toAbsolutePath());
@@ -178,7 +180,6 @@ public class Check extends Controller {
 		else if ("json".equals(type))
 			return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
 		else {
-			String callback = request().getQueryString("callback");
 			ObjectNode result = Json.newObject();
 			result.put("report", Util.read(tempDir.resolve("submission/report.html")));
 			if (callback == null)
