@@ -171,7 +171,7 @@ public class Check extends Controller {
 			else if ("type".equals(key)) type = value;
 			else if ("callback".equals(key)) callback = value;
 			else
-				Util.write(dir, key, URLDecoder.decode(value, "UTF-8"));
+				Util.write(dir, key, value);
 		}
 		if (problem == null) // problem was submitted in JSON
 			Util.runLabrat(config, type, repo, problem, level, tempDir.toAbsolutePath(), tempDir.resolve("submission").toAbsolutePath());
