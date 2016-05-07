@@ -183,7 +183,7 @@ public class Check extends Controller {
 			return ok(Util.read(tempDir.resolve("submission/report.txt"))).as("text/plain");
 		else if ("json".equals(type))
 			return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
-		else {
+		else if (callback.length() > 0) {
 			ObjectNode result = Json.newObject();
 			result.put("report", Util.read(tempDir.resolve("submission/report.html")));
 			if (callback == null)
@@ -191,6 +191,7 @@ public class Check extends Controller {
 			else
 				return ok(Jsonp.jsonp(callback, result));
 		}
+		return ok();
 		// TODO: Delete tempDir
 	}
 }
