@@ -177,21 +177,12 @@ public class Check extends Controller {
 			Util.runLabrat(config, type, repo, problem, level, tempDir.toAbsolutePath(), tempDir.resolve("submission").toAbsolutePath());
 		else
 			Util.runLabrat(config, type, repo, problem, level, tempDir.resolve("submission").toAbsolutePath());
-		if ("html".equals(type))
-			return ok(Util.read(tempDir.resolve("submission/report.html"))).as("text/html");
-		else if ("text".equals(type))
-			return ok(Util.read(tempDir.resolve("submission/report.txt"))).as("text/plain");
-		else if ("json".equals(type))
-			return ok(Util.read(tempDir.resolve("submission/report.json"))).as("application/json");
-		else if (callback.length() > 0) {
-			ObjectNode result = Json.newObject();
-			result.put("report", Util.read(tempDir.resolve("submission/report.html")));
-			if (callback == null)
-				return ok(result.asText());
-			else
-				return ok(Jsonp.jsonp(callback, result));
-		}
-		return ok();
+		ObjectNode result = Json.newObject();
+		result.put("report", Util.read(tempDir.resolve("submission/report.html")));
+		if (callback == null)
+			return ok(result.asText());
+		else
+			return ok(Jsonp.jsonp(callback, result));
 		// TODO: Delete tempDir
 	}
 }
