@@ -49,7 +49,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import play.Logger;
 
 public class Util {
 	public static final int TIMEOUT = 2 * 60 * 1000; // 2 minutes; 
@@ -391,8 +390,6 @@ public class Util {
 		String command = config.get("com.horstmann.codecheck." + type);
 		StringBuilder metas = new StringBuilder();
 		for (String meta : metaData) { if (metas.length() > 0) metas.append(" "); metas.append(meta); }
-		Logger.info("runLabrat MessageFormat({}, {}, {}, {}, {}, {})", command, level, submissionDir,
-				problemDir, metas);
 		String script = MessageFormat.format(command, level, submissionDir,
 				problemDir, metas);
 		String result = runProcess(script, TIMEOUT);

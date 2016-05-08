@@ -6,17 +6,14 @@ import models.PlayConfig;
 import models.Util;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import play.Logger;
 import play.libs.Json;
 import play.libs.Jsonp;
 import play.mvc.Controller;
@@ -164,7 +161,6 @@ public class Check extends Controller {
 		java.nio.file.Files.createDirectory(dir);
 		for (String key : queryParams.keySet()) {
 			String value = queryParams.get(key)[0];
-			Logger.info("key = {}, value = {}", key, value);
 			if ("repo".equals(key)) repo = value;
 			else if ("problem".equals(key)) problem = value;
 			else if ("level".equals(key)) level = value;
