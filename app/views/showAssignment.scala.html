@@ -1,0 +1,14 @@
+@(launchUrl: String, launchInputs: Map[String, String], assignmentURL: String)
+<html>
+    <body>
+    <p>LTI assignment URL: <code>@assignmentURL</code></p>
+	<form method="GET" name="form1" action="@launchUrl">
+        <input type="hidden" name="return_type" value="lti_launch_url" />
+	    <input type="hidden" name="url" value="@assignmentURL" ></textarea>
+        <input type="submit" name="submit" value="Next" />
+        @for((key, value) <- launchInputs) {
+            <input type="hidden" name="@key" value="@value"/> 
+        }
+     </form>
+     </body>
+</html>

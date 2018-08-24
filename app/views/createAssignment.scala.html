@@ -1,0 +1,19 @@
+@(contextID: String, resourceLinkID: String, toolConsumerInstanceGUID: String, launchPresentationReturnURL: String)
+@import helper._
+
+<p>Provide the problem URLs to be used for this assignment:</p>
+	
+@form(routes.LTIController.addAssignment()) {
+    
+    <div id="problem-form">
+	<textarea style="display: block; width: 90%;" name="url" rows="10"></textarea>
+       <input type="hidden" name="context_id" value="@contextID" />
+       <input type="hidden" name="resource_link_id" value="@resourceLinkID" />
+       <input type="hidden" name="tool_consumer_id" value="@toolConsumerInstanceGUID" />
+       <input type="hidden" name="launch_presentation_return_url" value="@launchPresentationReturnURL" />
+       <p>If you want this to be a timed assignment, enter the time limit in minutes:</p> 
+       <input type="text" name="duration" placeholder="0">
+    </div>
+    <br/><br/>
+    <input type="submit" name="submit" value="Save Assignment" />
+}

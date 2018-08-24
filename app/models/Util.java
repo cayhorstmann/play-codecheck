@@ -9,11 +9,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -27,11 +29,14 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
@@ -489,5 +494,60 @@ public class Util {
 			result.append(getStackTrace(ex));
 		}
 		return result.toString();		
+	}
+	
+    public static String getParam(Map<String, String[]> params, String key) {
+		String[] values = params.get(key);
+		if (values == null || values.length == 0) return null;
+		else return values[0];
+	}
+    
+    /**
+	 * Yields a map of query parameters in a HTTP URI
+	 * @param url the HTTP URL
+	 * @return the map of query parameters or an empty map if there are none
+	 * For example, if uri is http://fred.com?name=wilma&passw%C3%B6rd=c%26d%3De
+	 * then the result is { "name" -> "wilma", "passwörd" -> "c&d=e" }
+	 */
+	public static Map<String, String> getParams(String url)
+	{		
+		// https://www.talisman.org/~erlkonig/misc/lunatech%5Ewhat-every-webdev-must-know-about-url-encoding/
+		Map<String, String> params = new HashMap<>();
+		String rawQuery;
+		try {
+			rawQuery = new URI(url).getRawQuery();
+			if (rawQuery != null) {
+				for (String kvpair : rawQuery.split("&"))
+				{
+					int n = kvpair.indexOf("=");
+					params.put(
+						URLDecoder.decode(kvpair.substring(0, n), "UTF-8"), 
+						URLDecoder.decode(kvpair.substring(n + 1), "UTF-8"));
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			// UTF-8 is supported
+		} catch (URISyntaxException e1) {
+			// Return empty map
+		}
+		return params;
+	}
+    
+    public static String paramsToString(Map<String, String[]> params) {
+    	if (params == null) return "null";
+    	StringBuilder result = new StringBuilder();
+    	result.append("{");
+    	for (String key : params.keySet()) {
+    		if (result.length() > 1) result.append(", ");
+    		result.append(key); 
+    		result.append("=");
+    		result.append(Arrays.toString(params.get(key)));
+    	}
+    	result.append("}");
+    	return result.toString();
+    }
+    
+    public static boolean isInstructor(String role) {
+		return role != null && (role.contains("Faculty") || role.contains("TeachingAssistant") || role.contains("Instructor"));
 	}
 }

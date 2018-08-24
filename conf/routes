@@ -17,6 +17,11 @@ POST    /echo                             controllers.Application.echo()
 # Shows LMS config XML
 GET	/config			controllers.LTIController.config
 
+# Called when submitting the page for creating an assignment 
+# that is produced by create_exercise.scala.html
+# in controllers.HomeController.index
+POST	/addAssignment		controllers.LTIController.addAssignment
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
@@ -26,6 +31,9 @@ GET		/files/:repo/:problem		controllers.Files.filesHTML(repo: String, problem: S
 POST    /checkNJS					controllers.Check.checkNJS()
 # GET called from interactive element with jsonp result
 GET     /checkNJS					controllers.Check.checkNJS()
+
+# Canvas call to createAssignment (resource selection)
+POST    /createAssignment             controllers.LTIController.createAssignment
 
 # From Hien's project, but this is potentially useful for others 
 GET     /fileData                   controllers.Files.fileData(repo: String ?= "ext", problem: String, ccu: String ?= null)
