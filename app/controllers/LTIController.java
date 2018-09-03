@@ -72,8 +72,7 @@ public class LTIController extends Controller {
 
         String launchPresentationReturnURL = Util.getParam(postParams, "launch_presentation_return_url");
         String problemURL = Util.getParam(postParams, "url");
-        String host = request().host();
-        int ltiInsertLoc = problemURL.indexOf(host) + host.length();
+        int ltiInsertLoc = problemURL.indexOf("/", 8); //search for "/" after "https://"
         String assignmentURL = problemURL.substring(0, ltiInsertLoc) + "/lti" + problemURL.substring(ltiInsertLoc);
         return ok(showAssignment.render(launchPresentationReturnURL, 
     		   Util.getParams(launchPresentationReturnURL), assignmentURL));
